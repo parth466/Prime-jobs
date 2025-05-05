@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 // import { ModeToggle } from "@/components/ui/ModeToggle";
 
 // import { auth, provider } from "../../utils/firebase";
@@ -21,31 +22,54 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [Recruiter,setRecruiter] = useState(false);
   const navigate = useNavigate();
-
+  const [savedjobs, setSavedJobs] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-      const res = await fetch("http://localhost:5000/api/user/register", {
+      const role = Recruiter ? "Recruiter" : "JobSeeker";
+  
+      console.log("📤 Sending data:", {
+        name,
+        email,
+        password,
+        role,
+      });
+      const API_BASE_URL = import.meta.env.VITE_API_URL ;
+      console.log("API_BASE_URL:", API_BASE_URL); // Debug log
+      // Then use it like:
+  //  || "http://localhost:3000"
+      
+      const res = await fetch(`${API_BASE_URL}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role,
+        }),
       });
+  
       if (!res.ok) {
         throw new Error("Failed to register. Status: " + res.status);
       }
+  
       const data = await res.json();
+  
       if (data.message) {
         navigate("/login");
       } else {
-        alert(data.error);
+        alert(data.error || "Unknown error");
       }
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("🚫 Registration error:", error);
       alert("Error during registration. Please try again.");
     }
   };
+  
 
 
   return (
@@ -114,7 +138,7 @@ const Register = () => {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={LoginWithGoogle}
+                  
                 >
                   Login with Google
                 </Button>
@@ -126,6 +150,19 @@ const Register = () => {
                 Login
               </Link>
             </div>
+            <div className="grid gap-2">
+          <Label htmlFor="role">Role</Label>
+          <select
+            id="role"
+            value={Recruiter ? "Recruiter" : "JobSeeker"}
+            onChange={(e) => setRecruiter(e.target.value === "Recruiter")}
+            className="p-2 border rounded"
+          >
+            <option value="JobSeeker">Job Seeker</option>
+            <option value="Recruiter">Recruiter</option>
+          </select>
+        </div>
+
           </CardContent>
         </div>
       </div>

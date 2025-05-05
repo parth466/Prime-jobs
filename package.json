@@ -3,11 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://primecoder101.github.io/prime-jobs",
+
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start":"cd src/backend && nodemon server.js"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.4",

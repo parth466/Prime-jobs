@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -15,14 +16,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isPremium: {
-    type: Boolean,
-    default: false, // Indicates if the user has a premium account
-  },
   role: {
     type: String,
     enum: ['Recruiter', 'JobSeeker'], // Defines the role of the user
-    required: true,
+    // required: true,
   },
   appliedJobs: [
     {
@@ -32,7 +29,7 @@ const userSchema = new mongoose.Schema({
       },
       resume: {
         type: String, // URL or path to the resume file
-        required: true,
+        // required: true,
       },
       coverLetter: {
         type: String,
@@ -46,7 +43,7 @@ const userSchema = new mongoose.Schema({
   postedJobs: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Job', // Reference to the Job model for jobs posted by recruiters
+      ref: 'Job', 
     },
   ],
   createdAt: {
@@ -58,5 +55,6 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+export default User; // Export the user schema for use in other files
+// module.exports = mongoose.model('User', userSchema);
